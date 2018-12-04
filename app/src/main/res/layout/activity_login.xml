@@ -1,67 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
-    android:background="#9e9e9e">
+    android:background="@color/bg"
+    tools:context=".LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="24dp"
+        android:paddingTop="56dp"
+        android:paddingRight="24dp">
 
 
+        <ImageView
+            android:layout_width="259dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:contentDescription="TODO"
+            android:src="@drawable/logo" />
 
-
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/login_button"
-            android:layout_width="178dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="30dp" />
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
+            android:backgroundTint="@android:color/white"
             android:hint="@string/prompt_email"
             android:inputType="textEmailAddress"
             android:maxLines="1"
+            android:padding="10dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:padding="10dp"
-            android:singleLine="true" />
+            android:textColor="@color/white" />
 
 
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@android:color/white"
             android:hint="@string/prompt_password"
             android:imeActionId="6"
             android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
             android:maxLines="1"
+            android:padding="10dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:padding="10dp"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textColor="@color/white" />
+
         <Button
             android:id="@+id/sign_in_button"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:background="@color/turq"
             android:padding="15dp"
             android:text="@string/action_sign_in"
-            android:textStyle="bold"
-            android:textSize="15sp"/>
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="356dp"
+            android:layout_height="50dp"
+            android:layout_above="@+id/textView1"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:scaleType="centerInside" />
+
+        <TextView
+            android:id="@+id/link_signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="No account yet? Create one"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16dip" />
 
     </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>

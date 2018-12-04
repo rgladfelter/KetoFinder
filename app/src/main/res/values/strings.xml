@@ -4,7 +4,7 @@
     <string name="fb_login_protocol_scheme">fb1888076537973350</string>
     <string name="hint_email">email</string>
     <string name="hint_password">password</string>
-    <string name="prompt_password">password</string>
-    <string name="prompt_email">email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_email">Email</string>
     <string name="action_sign_in">Sign in</string>
 </resources>
