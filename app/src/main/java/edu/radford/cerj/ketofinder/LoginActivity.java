@@ -24,6 +24,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Map;
+
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
     private CallbackManager callbackManager;
@@ -73,33 +75,34 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        // App code
-                    }
+            new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    startActivity(new Intent(LoginActivity.this, MapActivity.class));
+                }
 
-                    @Override
-                    public void onCancel() {
-                        // App code
-                    }
+                @Override
+                public void onCancel() {
+                    // App code
+                }
 
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                    }
-                });
+                @Override
+                public void onError(FacebookException exception) {
+                    // App code
+                }
+            });
 
         mEmailField.setHintTextColor(Color.WHITE);
         mPasswordField.setHintTextColor(Color.WHITE);
-        }
+//        this.signIn("mgladfelter@gmail.com", "password");
+    }
 
 
     private void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
-        if (!validateForm()) {
-            return;
-        }
+//        if (!validateForm()) {
+//            return;
+//        }
 
 
         // [START sign_in_with_email]
@@ -113,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(LoginActivity.this, "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtras(updateUI(user)));
+                            startActivity(new Intent(LoginActivity.this, MapActivity.class));
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

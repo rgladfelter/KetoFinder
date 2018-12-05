@@ -16,4 +16,6 @@
     <string name="acc_info"><u>Account Information</u></string>
     <string name="name_tag"><u>Name</u></string>
     <string name="title_activity_create_account">CreateAccount</string>
+    <string name="title_activity_map">Map</string>
+    <string name="fb_client_token">071fc7a85eb641b24ddd3ea0a3d7a80e</string>
 </resources>
