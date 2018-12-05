@@ -7,4 +7,13 @@
     <string name="prompt_password">Password</string>
     <string name="prompt_email">Email</string>
     <string name="action_sign_in">Sign in</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_account">Account</string>
+    <string name="username"></string>
+    <string name="about"><u>About</u></string>
+    <string name="about_text"></string>
+    <string name="photo_url">Photo URL</string>
+    <string name="acc_info"><u>Account Information</u></string>
+    <string name="name_tag"><u>Name</u></string>
+    <string name="title_activity_create_account">CreateAccount</string>
 </resources>

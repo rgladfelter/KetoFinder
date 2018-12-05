@@ -91,6 +91,14 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16dip" />
 
+        <Button
+            android:id="@+id/create_acc_button"
+            android:layout_width="384dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sign_in_button"
+            android:layout_centerHorizontal="true"
+            android:text="Create Account" />
+
     </LinearLayout>
 
 </ScrollView>

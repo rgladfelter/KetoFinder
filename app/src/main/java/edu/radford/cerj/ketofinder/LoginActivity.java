@@ -15,8 +15,6 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -33,7 +31,17 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEmailField;
     private EditText mPasswordField;
 
-    private void updateUI(FirebaseUser currentUser) {
+    private Bundle updateUI(FirebaseUser user) {
+        Bundle userInfo = new Bundle();
+        if(user != null) {
+            userInfo.putString("name", user.getDisplayName());
+            userInfo.putString("email", user.getEmail());
+            if(user.getPhotoUrl() != null)
+                userInfo.putString("profile_pic", user.getPhotoUrl().toString());
+        }
+
+
+        return userInfo;
     }
 
     @Override
@@ -45,13 +53,22 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mEmailField = findViewById(R.id.email);
         mPasswordField = findViewById(R.id.password);
+
         LoginButton loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile");
         Button mSignInButton = findViewById(R.id.sign_in_button);
+        Button mCreateAccButton = findViewById(R.id.create_acc_button);
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+            }
+        });
+
+        mCreateAccButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, CreateAccountActivity.class));
             }
         });
 
@@ -77,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordField.setHintTextColor(Color.WHITE);
         }
 
+
     private void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
@@ -95,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(LoginActivity.this, "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(user);
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtras(updateUI(user)));
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
