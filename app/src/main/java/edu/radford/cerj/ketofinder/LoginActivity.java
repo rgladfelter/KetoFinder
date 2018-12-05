@@ -1,6 +1,7 @@
 package edu.radford.cerj.ketofinder;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -90,6 +91,9 @@ public class LoginActivity extends AppCompatActivity {
                         // App code
                     }
                 });
+
+        mEmailField.setHintTextColor(Color.WHITE);
+        mPasswordField.setHintTextColor(Color.WHITE);
         }
 
 
@@ -161,6 +165,12 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // disable going back to the MainActivity
+        moveTaskToBack(true);
     }
 
 }
