@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1071855163584-0db359oct1ob6ks8f046b1hi6k8ef41o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.radford.cerj.ketofinder",
+            "certificate_hash": "00ef71410be8ea8a0b946b1eb50b68962bcaf708"
+          }
+        },
+        {
           "client_id": "1071855163584-oueueuid5d1f1kopq7kurmfph7n6bu79.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071855163584-oueueuid5d1f1kopq7kurmfph7n6bu79.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
