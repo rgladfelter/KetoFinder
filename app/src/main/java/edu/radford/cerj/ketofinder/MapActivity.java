@@ -231,7 +231,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
     public void signOut(View v){
-        mAuth.getInstance().signOut();
+        FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(MapActivity.this, LoginActivity.class));
     }
 

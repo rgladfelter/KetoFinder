@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -26,12 +27,20 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
     private CallbackManager callbackManager;
     private FirebaseAuth mAuth;
     private EditText mEmailField;
     private EditText mPasswordField;
+
+
+
+//    @BindView(R.id.email) EditText mEmailField;
+//    @BindView(R.id.password) EditText mPasswordField;
 
     private Bundle updateUI(FirebaseUser user) {
         Bundle userInfo = new Bundle();
@@ -50,16 +59,18 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         callbackManager = CallbackManager.Factory.create();
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         mEmailField = findViewById(R.id.email);
         mPasswordField = findViewById(R.id.password);
 
+        TextView mSignupLink = (TextView) findViewById(R.id.link_signup);
         LoginButton loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile");
         Button mSignInButton = findViewById(R.id.sign_in_button);
-        Button mCreateAccButton = findViewById(R.id.create_acc_button);
+//        Button mCreateAccButton = findViewById(R.id.create_acc_button);
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,10 +78,19 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        mCreateAccButton.setOnClickListener(new View.OnClickListener() {
+//        mCreateAccButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(LoginActivity.this, CreateAccountActivity.class));
+//            }
+//        });
+
+        mSignupLink.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, CreateAccountActivity.class));
+                finish();
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
 
@@ -92,8 +112,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-        mEmailField.setHintTextColor(Color.WHITE);
-        mPasswordField.setHintTextColor(Color.WHITE);
+//        mEmailField.setHintTextColor(Color.WHITE);
+//        mPasswordField.setHintTextColor(Color.WHITE);
         //this.signIn("mgladfelter@gmail.com", "password");
     }
 

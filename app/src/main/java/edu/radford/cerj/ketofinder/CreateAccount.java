@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,6 +46,7 @@ public class CreateAccount extends AppCompatActivity {
         pass = findViewById(R.id.enter_pass);
         firstName = findViewById(R.id.enter_first_name);
         lastName = findViewById(R.id.enter_last_name);
+        TextView mlinkLogin = (TextView) findViewById(R.id.link_login);
 
         Button mSubmitButton = findViewById(R.id.submit_button);
 
@@ -55,6 +57,15 @@ public class CreateAccount extends AppCompatActivity {
             }
         });
 
+        mlinkLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+            }
+        });
 
     }
 

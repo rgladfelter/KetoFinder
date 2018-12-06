@@ -32,7 +32,9 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:4.38.1'
     implementation 'com.google.firebase:firebase-database:16.0.5'
     implementation 'com.facebook.android:facebook-places:4.38.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
-com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true;
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

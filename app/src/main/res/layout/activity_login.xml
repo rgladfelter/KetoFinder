@@ -24,14 +24,40 @@
             android:contentDescription="TODO"
             android:src="@drawable/logo" />
 
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginBottom="8dp">-->
+            <!--<EditText android:id="@+id/email"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="textEmailAddress"-->
+                <!--android:hint="Email" />-->
+        <!--</android.support.design.widget.TextInputLayout>-->
+
+        <!--&lt;!&ndash;  Password Label &ndash;&gt;-->
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginBottom="8dp">-->
+            <!--<EditText android:id="@+id/password"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="textPassword"-->
+                <!--android:hint="Password"/>-->
+        <!--</android.support.design.widget.TextInputLayout>-->
+
+
         <EditText
             android:id="@+id/email"
+            android:hint="@string/prompt_email"
+            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:backgroundTint="@android:color/white"
-            android:hint="@string/prompt_email"
-            android:inputType="textEmailAddress"
             android:maxLines="1"
             android:padding="10dp"
             android:paddingStart="20dp"
@@ -59,16 +85,17 @@
 
         <Button
             android:id="@+id/sign_in_button"
+            android:text="@string/action_sign_in"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@color/turq"
             android:padding="15dp"
-            android:text="@string/action_sign_in"
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:textStyle="bold" />
+
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
@@ -89,13 +116,13 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16dip" />
 
-        <Button
-            android:id="@+id/create_acc_button"
-            android:layout_width="384dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/sign_in_button"
-            android:layout_centerHorizontal="true"
-            android:text="Create Account" />
+        <!--<Button-->
+            <!--android:id="@+id/create_acc_button"-->
+            <!--android:layout_width="384dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/sign_in_button"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:text="Create Account" />-->
 
     </LinearLayout>
 
