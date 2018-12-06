@@ -20,6 +20,7 @@ import android.widget.Button;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.places.PlaceManager;
 import com.facebook.places.model.PlaceSearchRequestParams;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,7 +43,6 @@ import org.json.JSONObject;
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
     private LocationManager lm;
     private GoogleMap mMap;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     @Override
@@ -231,7 +231,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
     public void signOut(View v){
-        mAuth.getInstance().signOut();
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
         startActivity(new Intent(MapActivity.this, LoginActivity.class));
     }
 
