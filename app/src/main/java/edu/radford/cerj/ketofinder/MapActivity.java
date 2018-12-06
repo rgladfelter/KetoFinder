@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Button;
 
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
@@ -30,6 +31,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,11 +42,20 @@ import org.json.JSONObject;
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
     private LocationManager lm;
     private GoogleMap mMap;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        Button logOutButton = findViewById(R.id.log_out);
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signOut(view);
+            }
+        });
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -215,6 +228,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         } else {
             return true;
         }
+    }
+
+    public void signOut(View v){
+        mAuth.getInstance().signOut();
+        startActivity(new Intent(MapActivity.this, LoginActivity.class));
     }
 
 }

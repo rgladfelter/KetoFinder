@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.maps.MapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity
         implements AccountFragment.OnFragmentInteractionListener{
 
     private AccountFragment acc_frag = new AccountFragment();
+    private AccountFragment map_frag = new AccountFragment();
 
     private DatabaseReference database;
     private FirebaseAuth mAuth;
@@ -33,6 +35,13 @@ public class MainActivity extends AppCompatActivity
                             = getSupportFragmentManager().beginTransaction();
                     frag_trans1.replace(R.id.frame, acc_frag, "Fragment");
                     frag_trans1.commit();
+                    return true;
+                case R.id.navigation_map:
+                    setTitle("Account");
+                    android.support.v4.app.FragmentTransaction frag_trans2
+                            = getSupportFragmentManager().beginTransaction();
+                    frag_trans2.replace(R.id.frame, map_frag, "Fragment");
+                    frag_trans2.commit();
                     return true;
             }
             return false;
