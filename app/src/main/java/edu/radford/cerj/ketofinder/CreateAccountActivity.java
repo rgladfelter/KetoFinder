@@ -85,6 +85,12 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     }
 
+    public void returnUser(View view) {
+        startActivity(new Intent(CreateAccountActivity.this, LoginActivity.class));
+        finish();
+        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+    }
+
     private Bundle updateUI(FirebaseUser user) {
         Bundle userInfo = new Bundle();
         if(user != null) {

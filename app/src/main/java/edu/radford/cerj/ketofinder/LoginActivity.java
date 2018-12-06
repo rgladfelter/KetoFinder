@@ -27,8 +27,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+//import butterknife.BindView;
+//import butterknife.ButterKnife;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";

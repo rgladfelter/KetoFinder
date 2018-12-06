@@ -96,6 +96,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
+            android:clickable="true"
+            android:onClick="returnUser"
             android:text="Already a member? Login"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16dip" />
