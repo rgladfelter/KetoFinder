@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp"
-    tools:context="edu.radford.cerj.ketofinder.EditAccount">
+    tools:context="edu.radford.cerj.ketofinder.EditAccountActivity">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
