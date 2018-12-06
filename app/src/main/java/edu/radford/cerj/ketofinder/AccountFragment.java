@@ -7,20 +7,15 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,15 +26,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Account.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link Account#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class Account extends Fragment {
+public class AccountFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,7 +46,7 @@ public class Account extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public Account() {
+    public AccountFragment() {
         // Required empty public constructor
     }
 
@@ -72,8 +59,8 @@ public class Account extends Fragment {
      * @return A new instance of fragment Account.
      */
     // TODO: Rename and change types and number of parameters
-    public static Account newInstance(String param1, String param2) {
-        Account fragment = new Account();
+    public static AccountFragment newInstance(String param1, String param2) {
+        AccountFragment fragment = new AccountFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -193,7 +180,7 @@ public class Account extends Fragment {
     }
 
     public void editAccount(View v){
-        startActivity(new Intent(getActivity(), EditAccount.class));
+        startActivity(new Intent(getActivity(), EditAccountActivity.class));
     }
 
     public void signOut(View v){

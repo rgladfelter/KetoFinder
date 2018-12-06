@@ -13,9 +13,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
 public class MainActivity extends AppCompatActivity
-        implements Account.OnFragmentInteractionListener{
+        implements AccountFragment.OnFragmentInteractionListener{
 
-    private Account acc_frag = new Account();
+    private AccountFragment acc_frag = new AccountFragment();
 
     private DatabaseReference database;
     private FirebaseAuth mAuth;

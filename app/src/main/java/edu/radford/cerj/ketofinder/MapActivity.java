@@ -4,21 +4,36 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.places.PlaceManager;
 import com.facebook.places.model.PlaceSearchRequestParams;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
     private LocationManager lm;
@@ -34,6 +49,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mapFragment.getMapAsync(this);
         String CLIENT_TOKEN = getString(R.string.fb_client_token);
         FacebookSdk.setClientToken(CLIENT_TOKEN);
+        FloatingActionButton profileFab = findViewById(R.id.profileFab);
+        profileFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MapActivity.this, EditAccountActivity.class));
+            }
+        });
     }
 
 
@@ -49,7 +71,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
         // Add a marker in Sydney and move the camera
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!checkLocationPermission()) {
@@ -65,10 +87,28 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            PlaceSearchRequestParams params = new PlaceSearchRequestParams.Builder()
+                    .addCategory("FOOD_BEVERAGE")
+                    .setDistance(5000)
+                    .addField("name")
+                    .addField("location")
+                    .build();
 
-            PlaceSearchRequestParams params = new PlaceSearchRequestParams.Builder().addCategory("FOOD_BEVERAGE").setDistance(1000).addField("name").addField("location").build();
+            Criteria criteria = new Criteria();
 
-            PlaceManager.newPlaceSearchRequest(params, new PlaceManager.OnRequestReadyCallback() {
+            Location location = lm.getLastKnownLocation(lm.getBestProvider(criteria, false));
+            if (location != null) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                        .zoom(17)                   // Sets the zoom
+                        .bearing(180)                // Sets the orientation of the camera to east
+                        .tilt(0)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+                PlaceManager.newPlaceSearchRequest(params, new PlaceManager.OnRequestReadyCallback() {
                 @Override
                 public void onLocationError(PlaceManager.LocationError error) {
 
@@ -79,12 +119,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     graphRequest.setCallback(new GraphRequest.Callback() {
                         @Override
                         public void onCompleted(GraphResponse response) {
-                            response.getConnection();
+                            try {
+                                MapActivity.this.setMarkers(response.getJSONObject().getJSONArray("data"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                     graphRequest.executeAsync();
                 }
             });
+        }
+    }
+
+    private void setMarkers(JSONArray data) throws JSONException {
+        for (int i=0;i<data.length();i++) {
+            JSONObject place = data.getJSONObject(i);
+            JSONObject location = place.getJSONObject("location");
+            LatLng position = new LatLng(location.getDouble("latitude"), location.getDouble("longitude"));
+            mMap.addMarker(new MarkerOptions()
+                    .title(place.getString("name"))
+                    .position(position)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+            );
         }
     }
 

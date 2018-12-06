@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mEmailField.setHintTextColor(Color.WHITE);
         mPasswordField.setHintTextColor(Color.WHITE);
-//        this.signIn("mgladfelter@gmail.com", "password");
+        //this.signIn("mgladfelter@gmail.com", "password");
     }
 
 
