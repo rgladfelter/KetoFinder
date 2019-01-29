@@ -120,9 +120,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
-//        if (!validateForm()) {
-//            return;
-//        }
+        if (!validateForm()) {
+            return;
+        }
 
 
         // [START sign_in_with_email]
