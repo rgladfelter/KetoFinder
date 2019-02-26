@@ -7,13 +7,16 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -83,6 +86,23 @@ public class AccountFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
+        FloatingActionButton profileFab = view.findViewById(R.id.edit_account);
+        profileFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), EditAccountActivity.class));
+            }
+        });
+
+        Button logOutButton = view.findViewById(R.id.sign_out_button);
+
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signOut(view);
+            }
+        });
+
         FirebaseUser user = mAuth.getCurrentUser();
         mDatabase.child("Users").child(user.getUid());
 
@@ -132,8 +152,8 @@ public class AccountFragment extends Fragment {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-        if(getArguments().getString("profile_pic") != null)
-            new DownloadImageTask(pic).execute(getArguments().getString("profile_pic"));
+        //if(getArguments().getString("profile_pic") != null)
+        //    new DownloadImageTask(pic).execute(getArguments().getString("profile_pic"));
 
         return view;
     }
@@ -226,4 +246,5 @@ class DownloadImageTask extends AsyncTask<String,Void,Bitmap> {
     protected void onPostExecute(Bitmap result){
         imageView.setImageBitmap(result);
     }
+
 }

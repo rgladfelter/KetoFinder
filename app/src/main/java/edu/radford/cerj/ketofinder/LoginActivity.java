@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
             new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    startActivity(new Intent(LoginActivity.this, MapActivity.class));
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
 
                 @Override
@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(LoginActivity.this, "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, MapActivity.class));
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.

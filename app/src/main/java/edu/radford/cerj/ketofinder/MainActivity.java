@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,11 +14,12 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
-public class MainActivity extends AppCompatActivity
-        implements AccountFragment.OnFragmentInteractionListener{
+public class MainActivity extends FragmentActivity
+        implements AccountFragment.OnFragmentInteractionListener,
+        edu.radford.cerj.ketofinder.MapFragment.OnFragmentInteractionListener{
 
     private AccountFragment acc_frag = new AccountFragment();
-    private AccountFragment map_frag = new AccountFragment();
+    private edu.radford.cerj.ketofinder.MapFragment map_frag = new edu.radford.cerj.ketofinder.MapFragment();
 
     private DatabaseReference database;
     private FirebaseAuth mAuth;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity
                     frag_trans1.commit();
                     return true;
                 case R.id.navigation_map:
-                    setTitle("Account");
+                    setTitle("Map");
                     android.support.v4.app.FragmentTransaction frag_trans2
                             = getSupportFragmentManager().beginTransaction();
                     frag_trans2.replace(R.id.frame, map_frag, "Fragment");
