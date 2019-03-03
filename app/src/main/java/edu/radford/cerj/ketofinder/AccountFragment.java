@@ -86,7 +86,8 @@ public class AccountFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
-        FloatingActionButton profileFab = view.findViewById(R.id.edit_account);
+//        FloatingActionButton profileFab = view.findViewById(R.id.edit_account);
+        ImageView profileFab = view.findViewById(R.id.edit_account);
         profileFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +95,7 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        Button logOutButton = view.findViewById(R.id.sign_out_button);
+        ImageView logOutButton = view.findViewById(R.id.sign_out_button);
 
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override

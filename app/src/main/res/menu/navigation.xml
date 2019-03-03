@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <item
         android:id="@+id/navigation_account"
+        android:icon="@drawable/ic_person_24dp"
         android:title="@string/title_account" />
 
     <item
         android:id="@+id/navigation_map"
-        android:title="Map"/>
+        android:icon="@drawable/ic_map_24dp"
+        android:title="@string/title_map" />
+
+
+
+
     <!--
         <item
             android:id="@+id/navigation_groceries"
