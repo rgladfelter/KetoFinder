@@ -52,10 +52,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="OK" />
+
     <Button
         android:id="@+id/delete_account"
-        android:layout_width="wrap_content"
+        android:layout_width="129dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/delete_account" />
+        android:background="@color/red"
+        android:text="@string/delete_account"
+        android:textColor="@color/white" />
 </LinearLayout>
