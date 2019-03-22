@@ -110,11 +110,34 @@ public class AccountFragment extends Fragment {
         //These long winded calls make sure that if there is a user already created that they will
         //get their respective names, about texts, and profile pictures if applicable
         name = view.findViewById(R.id.users_name);
-        mDatabase.child("Users").child(user.getUid()).child("Name").addValueEventListener(new ValueEventListener() {
+        TextView tv_name = view.findViewById(R.id.tv_name);
+        mDatabase.child("Users").child(user.getUid()).child("firstName").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() != null){
                     name.setText((CharSequence) dataSnapshot.getValue());
+                    tv_name.setText((CharSequence) dataSnapshot.getValue());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+
+        //These long winded calls make sure that if there is a user already created that they will
+        //get their respective names, about texts, and profile pictures if applicable
+        mDatabase.child("Users").child(user.getUid()).child("lastName").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null){
+                    name.append(" ");
+                    name.append((CharSequence) dataSnapshot.getValue());
+                    tv_name.append(" ");
+                    tv_name.append((CharSequence) dataSnapshot.getValue());
+
                 }
             }
 

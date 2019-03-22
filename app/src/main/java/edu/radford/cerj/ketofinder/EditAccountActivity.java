@@ -28,7 +28,8 @@ public class EditAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_account);
 
-        final EditText name = findViewById(R.id.enter_name);
+        final EditText name = findViewById(R.id.enter_first);
+        final EditText last = findViewById(R.id.enter_last);
         final EditText about = findViewById(R.id.enter_about);
         final EditText pic = findViewById(R.id.enter_pic);
 
@@ -40,7 +41,9 @@ public class EditAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 if(!name.getText().toString().equals(""))
-                    mDatabase.child("Users").child(user.getUid()).child("Name").setValue(name.getText().toString());
+                    mDatabase.child("Users").child(user.getUid()).child("firstName").setValue(name.getText().toString());
+                if(!last.getText().toString().equals(""))
+                    mDatabase.child("Users").child(user.getUid()).child("lastName").setValue(name.getText().toString());
                 if(!about.getText().toString().equals(""))
                     mDatabase.child("Users").child(user.getUid()).child("About").setValue(about.getText().toString());
                 if(!pic.getText().toString().equals(""))
