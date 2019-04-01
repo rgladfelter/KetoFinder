@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
@@ -44,6 +48,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,6 +69,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private LocationManager lm;
     private GoogleMap mMap;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private TextInputEditText locationSearch;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -114,6 +122,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
         String CLIENT_TOKEN = getString(R.string.fb_client_token);
         FacebookSdk.setClientToken(CLIENT_TOKEN);
+
+        Button searchButton = view.findViewById(R.id.search_button);
+        locationSearch = view.findViewById(R.id.search_edit_text);
+
+        searchButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                onMapSearch(view);
+            }
+        });
 
         return view;
     }
@@ -313,6 +331,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             return false;
         } else {
             return true;
+        }
+    }
+
+    public void onMapSearch(View view) {
+
+        String location = locationSearch.getText().toString();
+        List<Address> addressList = null;
+
+        if (location != null || !location.equals("")) {
+            Geocoder geocoder = new Geocoder(getContext());
+            try {
+                addressList = geocoder.getFromLocationName(location, 1);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Address address = addressList.get(0);
+            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
         }
     }
 
