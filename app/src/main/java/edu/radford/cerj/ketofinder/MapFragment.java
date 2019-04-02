@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
@@ -41,8 +42,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,6 +74,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private TextInputEditText locationSearch;
+    private FirebaseAuth mAuth;
+
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -102,6 +109,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -180,13 +188,51 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             JSONObject place = data.getJSONObject(i);
             JSONObject location = place.getJSONObject("location");
             LatLng position = new LatLng(location.getDouble("latitude"), location.getDouble("longitude"));
-            mMap.addMarker(new MarkerOptions()
-                    .title(place.getString("name"))
-                    .position(position)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-            );
+
+            mDatabase.child("Places").child(place.getString("id")).child("Name").setValue(place.getString("name"));
+            mDatabase.child("Places").child(place.getString("id")).child("City").setValue(location.getString("city"));
+            mDatabase.child("Places").child(place.getString("id")).child("Country").setValue(location.getString("country"));
+            mDatabase.child("Places").child(place.getString("id")).child("Latitude").setValue(location.getString("latitude"));
+            mDatabase.child("Places").child(place.getString("id")).child("Longitude").setValue(location.getString("longitude"));
+            mDatabase.child("Places").child(place.getString("id")).child("State").setValue(location.getString("state"));
+            mDatabase.child("Places").child(place.getString("id")).child("Street").setValue(location.getString("street"));
+            mDatabase.child("Places").child(place.getString("id")).child("Zip").setValue(location.getString("zip"));
+            mDatabase.child("Places").child(place.getString("id")).child("isKeto").setValue("false");
+            mDatabase.child("Places").child(place.getString("id")).child("isKeto").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                System.out.print(dataSnapshot.getValue().toString().equals("true"));
+                    if (dataSnapshot.getValue().toString().equals("true")) {
+                        try {
+                            mMap.addMarker(new MarkerOptions()
+                                    .title(place.getString("name"))
+                                    .position(position)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                        } catch (JSONException e) {
+                        }
+                    }else{
+                            try {
+                                mMap.addMarker(new MarkerOptions()
+                                        .title(place.getString("name"))
+                                        .position(position)
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                            } catch (JSONException e) {
+                            }
+                        }
+                    }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            }
         }
-    }
+
+
+
+
+
+
 
     /**
      * Manipulates the map once available.
@@ -350,8 +396,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+            
         }
     }
 
