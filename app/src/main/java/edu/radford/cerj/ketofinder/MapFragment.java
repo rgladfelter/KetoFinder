@@ -134,6 +134,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Button searchButton = view.findViewById(R.id.search_button);
         locationSearch = view.findViewById(R.id.search_edit_text);
 
+        Button suggestButton = view.findViewById(R.id.button3);
+
+        suggestButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                startActivity(new Intent(getActivity(), SuggestLocationActivity.class));
+            }
+        });
+
         searchButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -396,9 +405,63 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
-            
+            //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+
+            //setLatLongSearch(latLng);
         }
     }
 
-}
+//    public void setLatLongSearch(LatLng latLng) {
+//        if (ContextCompat.checkSelfPermission(getContext(),
+//                Manifest.permission.ACCESS_FINE_LOCATION)
+//                == PackageManager.PERMISSION_GRANTED) {
+//
+//            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+//            PlaceSearchRequestParams params = new PlaceSearchRequestParams.Builder()
+//                    .addCategory("FOOD_BEVERAGE")
+//                    .setDistance(5000)
+//                    .addField("name")
+//                    .addField("location")
+//                    .build();
+//            Criteria criteria = new Criteria();
+//
+//            Location location = lm.getLastKnownLocation(lm.getBestProvider(criteria, false));
+//
+//            location.setLatitude(latLng.latitude);
+//            location.setLongitude(latLng.longitude);
+//            if (location != null) {
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+//
+//                CameraPosition cameraPosition = new CameraPosition.Builder()
+//                        .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+//                        .zoom(17)                   // Sets the zoom
+//                        .bearing(0)                // Sets the orientation of the camera to east
+//                        .tilt(0)                   // Sets the tilt of the camera to 30 degrees
+//                        .build();                   // Creates a CameraPosition from the builder
+//                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//            }
+//            PlaceManager.newPlaceSearchRequest(params, new PlaceManager.OnRequestReadyCallback() {
+//                @Override
+//                public void onLocationError(PlaceManager.LocationError error) {
+//
+//                }
+//
+//                @Override
+//                public void onRequestReady(GraphRequest graphRequest) {
+//                    graphRequest.setCallback(new GraphRequest.Callback() {
+//                        @Override
+//                        public void onCompleted(GraphResponse response) {
+//                            try {
+//                                MapFragment.this.setMarkers(response.getJSONObject().getJSONArray("data"));
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    });
+//                    graphRequest.executeAsync();
+//                }
+//            });
+//        }
+//    }
+    }
+

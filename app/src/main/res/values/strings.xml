@@ -18,10 +18,11 @@
     <string name="lname_tag"><u>Last</u></string>
     <string name="title_activity_create_account">CreateAccount</string>
     <string name="title_activity_map">Map</string>
-    <string name="fb_client_token">071fc7a85eb641b24ddd3ea0a3d7a80e</string>
+    <string name="fb_client_token">a384d0c0bc73c62ae930c5c37b4382dc</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_map"></string>
     <string name="delete_account">Delete Account</string>
+    <string name="title_activity_suggest_location">SuggestLocationActivity</string>
 </resources>
