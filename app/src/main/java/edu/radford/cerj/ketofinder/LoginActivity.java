@@ -66,18 +66,13 @@ public class LoginActivity extends AppCompatActivity {
         mEmailField = findViewById(R.id.email);
         mPasswordField = findViewById(R.id.password);
 
-        TextView mSignupLink = (TextView) findViewById(R.id.link_signup);
+        TextView mSignupLink = findViewById(R.id.link_signup);
         LoginButton loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile");
         Button mSignInButton = findViewById(R.id.sign_in_button);
 //        Button mCreateAccButton = findViewById(R.id.create_acc_button);
-        mSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-            }
-        });
-
+        mSignInButton.setOnClickListener(view -> signIn(mEmailField.getText().toString(), mPasswordField.getText().toString()));
+        
 //        mCreateAccButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {

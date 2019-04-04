@@ -15,8 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
 public class MainActivity extends FragmentActivity
-        implements AccountFragment.OnFragmentInteractionListener,
-        edu.radford.cerj.ketofinder.MapFragment.OnFragmentInteractionListener{
+        implements AccountFragment.OnFragmentInteractionListener{
 
     private AccountFragment acc_frag = new AccountFragment();
     private edu.radford.cerj.ketofinder.MapFragment map_frag = new edu.radford.cerj.ketofinder.MapFragment();

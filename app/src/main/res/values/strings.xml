@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">KetoFinder</string>
+    <string name="address_format">%1$s %2$s\n%3$s, %4$s %5$s</string>
+    <string name="address_format2">%1$s\n%2$s, %3$s %4$s</string>
     <string name="facebook_app_id">1888076537973350</string>
     <string name="fb_login_protocol_scheme">fb1888076537973350</string>
     <string name="hint_email">email</string>
@@ -8,7 +10,7 @@
     <string name="prompt_email">Email</string>
     <string name="action_sign_in">Sign in</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_account"></string>
+    <string name="title_account">Account</string>
     <string name="username"></string>
     <string name="about"><u>About</u></string>
     <string name="about_text"></string>
@@ -22,7 +24,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_map"></string>
+    <string name="title_map">Map</string>
     <string name="delete_account">Delete Account</string>
     <string name="title_activity_suggest_location">SuggestLocationActivity</string>
+    <string name="address">Address</string>
+    <string name="pin_drop_desc">Please select location on the map</string>
+    <string name="restaurant_name">Restaurant Name</string>
+    <string name="restaurant_name_error">Please enter the restaurant name</string>
+    <string name="address_error">Please select restaurant location on the map</string>
 </resources>

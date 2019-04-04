@@ -1,103 +1,107 @@
 package edu.radford.cerj.ketofinder;
 
-import java.io.Serializable;
-import com.google.firebase.database.IgnoreExtraProperties;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Place implements Serializable {
-    public String name;
-    public String city;
-    public String country;
-    public double lat;
-    public double lng;
-    public String state;
-    public String street;
-    public String zip;
-    public String id;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-    public Place(String _name, String _city, String _country, double _lat, double _lng, String _state, String _street, String _zip, String _id) {
-        this.name = _name;
-        this.city = _city;
-        country = _country;
-        lat = _lat;
-        lng = _lng;
-        state = _state;
-        street = _street;
-        zip = _zip;
-        id = _id;
+public class Place implements Parcelable
+{
+
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("location")
+    @Expose
+    private Location location;
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("custom")
+    @Expose
+    private boolean custom;
+    @SerializedName("keto")
+    @Expose
+    private boolean keto;
+    public final static Parcelable.Creator<Place> CREATOR = new Creator<Place>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Place createFromParcel(Parcel in) {
+            return new Place(in);
+        }
+
+        public Place[] newArray(int size) {
+            return (new Place[size]);
+        }
+
+    }
+            ;
+
+    protected Place(Parcel in) {
+        this.name = ((String) in.readValue((String.class.getClassLoader())));
+        this.location = ((Location) in.readValue((Location.class.getClassLoader())));
+        this.id = ((String) in.readValue((String.class.getClassLoader())));
+        this.custom = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
+        this.keto = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
+    }
+
+    public Place() {
     }
 
     public String getName() {
         return name;
     }
 
-    public String getCity() {
-        return city;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getCountry() {
-        return country;
+    public Location getLocation() {
+        return location;
     }
 
-    public double getLat() {
-        return lat;
-    }
-
-    public double getLng() {
-        return lng;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public String getZip() {
-        return zip;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public void setLng(double lng) {
-        this.lng = lng;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
 
+    public boolean getCustom() {
+        return custom;
+    }
+
+    public void setCustom(boolean custom) {
+        this.custom = custom;
+    }
+
+    public boolean getKeto() {
+        return keto;
+    }
+
+    public void setKeto(boolean keto) {
+        this.keto = keto;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(name);
+        dest.writeValue(location);
+        dest.writeValue(id);
+        dest.writeValue(custom);
+        dest.writeValue(keto);
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
 }
-
-

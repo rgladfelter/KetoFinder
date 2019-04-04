@@ -50,25 +50,25 @@
 
         <ImageView
             android:id="@+id/sign_out_button"
-            android:onClick="signOut"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:adjustViewBounds="true"
+            android:onClick="signOut"
             android:scaleType="centerInside"
             android:src="@drawable/ic_exit_to_app" />
 
         <ImageView
             android:id="@+id/edit_account"
-            android:onClick="editAccount"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
             android:adjustViewBounds="true"
+            android:onClick="editAccount"
             android:scaleType="centerInside"
             android:src="@drawable/ic_settings" />
 

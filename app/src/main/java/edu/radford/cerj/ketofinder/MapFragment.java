@@ -3,239 +3,148 @@ package edu.radford.cerj.ketofinder;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.login.LoginManager;
-import com.facebook.places.PlaceManager;
-import com.facebook.places.model.PlaceSearchRequestParams;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MapFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MapFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class MapFragment extends Fragment implements OnMapReadyCallback, PlacesRepository.OnPlaceUpdateListener, PlacesRepository.OnCustomPlaceAddedListener {
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+
+//    @BindView(R.id.search_button) Button searchButton;
+    @BindView(R.id.suggest_button)
+    FloatingActionButton suggestButton;
+
+    @BindView(R.id.search_edit_text)
+    EditText locationSearch;
+
+    @BindView(R.id.information_frag)
+    FrameLayout informationLayout;
 
     private LocationManager lm;
     private GoogleMap mMap;
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-    private TextInputEditText locationSearch;
-    private FirebaseAuth mAuth;
-
-
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
-    public MapFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MapFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MapFragment newInstance(String param1, String param2) {
-        MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private Map<String, Marker> mMarkerMap;
+    private @Nullable DropPinFragment mDropPinFragment;
+    private @Nullable RestaurantInfoFragment mRestaurantInfoFragment;
+    private Marker mDroppedPin;
+    private @Nullable List<Place> mPlaces;
+    public MapFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        FacebookSdk.setClientToken(getString(R.string.fb_client_token));
+        PlacesRepository.setOnPlaceUpdateListener(this);
+        PlacesRepository.setOnCustomPlaceAddedListener(this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        ButterKnife.bind(this, view);
 
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        String CLIENT_TOKEN = getString(R.string.fb_client_token);
-        FacebookSdk.setClientToken(CLIENT_TOKEN);
+        Objects.requireNonNull(mapFragment).getMapAsync(this);
 
-        Button searchButton = view.findViewById(R.id.search_button);
-        locationSearch = view.findViewById(R.id.search_edit_text);
+        suggestButton.setOnClickListener(v -> dropPin());
+//        searchButton.setOnClickListener(v -> );
 
-        Button suggestButton = view.findViewById(R.id.button3);
-
-        suggestButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                startActivity(new Intent(getActivity(), SuggestLocationActivity.class));
+        locationSearch.setOnKeyListener((v, keyCode, event) -> {
+            // If the event is a key-down event on the "enter" button
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                // Perform action on key press
+                onMapSearch();
+                return true;
             }
+            return false;
         });
-
-        searchButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                onMapSearch(view);
-            }
-        });
-
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
-    private void setMarkers(JSONArray data) throws JSONException {
-        for (int i=0;i<data.length();i++) {
-            JSONObject place = data.getJSONObject(i);
-            JSONObject location = place.getJSONObject("location");
-            LatLng position = new LatLng(location.getDouble("latitude"), location.getDouble("longitude"));
-
-            mDatabase.child("Places").child(place.getString("id")).child("Name").setValue(place.getString("name"));
-            mDatabase.child("Places").child(place.getString("id")).child("City").setValue(location.getString("city"));
-            mDatabase.child("Places").child(place.getString("id")).child("Country").setValue(location.getString("country"));
-            mDatabase.child("Places").child(place.getString("id")).child("Latitude").setValue(location.getString("latitude"));
-            mDatabase.child("Places").child(place.getString("id")).child("Longitude").setValue(location.getString("longitude"));
-            mDatabase.child("Places").child(place.getString("id")).child("State").setValue(location.getString("state"));
-            mDatabase.child("Places").child(place.getString("id")).child("Street").setValue(location.getString("street"));
-            mDatabase.child("Places").child(place.getString("id")).child("Zip").setValue(location.getString("zip"));
-            mDatabase.child("Places").child(place.getString("id")).child("isKeto").setValue("false");
-            mDatabase.child("Places").child(place.getString("id")).child("isKeto").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                System.out.print(dataSnapshot.getValue().toString().equals("true"));
-                    if (dataSnapshot.getValue().toString().equals("true")) {
-                        try {
-                            mMap.addMarker(new MarkerOptions()
-                                    .title(place.getString("name"))
-                                    .position(position)
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-                        } catch (JSONException e) {
-                        }
-                    }else{
-                            try {
-                                mMap.addMarker(new MarkerOptions()
-                                        .title(place.getString("name"))
-                                        .position(position)
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                            } catch (JSONException e) {
-                            }
-                        }
-                    }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
+    private void dropPin() {
+        informationLayout.bringToFront();
+        mDropPinFragment = new DropPinFragment();
+        mDropPinFragment.attachParentFragment(() -> {
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+            transaction.remove(mDropPinFragment);
+            transaction.commit();
+            mDropPinFragment = null;
+            if(mDroppedPin != null) {
+                mDroppedPin.remove();
+                mDroppedPin = null;
             }
+        });
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_out_up, R.anim.slide_in_up);
+        transaction.replace(R.id.information_frag, mDropPinFragment, "Fragment");
+        transaction.commit();
+    }
+
+    private void setMarkers(List<Place> places) {
+        mPlaces = places;
+        mMarkerMap = new HashMap<>();
+        for (Place place : places) {
+            edu.radford.cerj.ketofinder.Location location = place.getLocation();
+            LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
+
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .title(place.getName())
+                    .position(position)
+                    .icon(getIcon(place)));
+            mMarkerMap.put(place.getId(), marker);
         }
+    }
 
 
 
@@ -256,6 +165,57 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
+        mMap.setOnMyLocationButtonClickListener(() -> {
+            if (ContextCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Criteria criteria = new Criteria();
+
+                Location location = lm.getLastKnownLocation(lm.getBestProvider(criteria, false));
+                if (location != null) {
+                    setLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+                }
+
+            }
+            return false;
+        });
+
+        mMap.setOnMapClickListener(latLng -> {
+            if(mDropPinFragment != null) {
+                if(mDroppedPin != null) {
+                    mDroppedPin.remove();
+                }
+                mDroppedPin = mMap.addMarker(
+                    new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)
+                ));
+                mDropPinFragment.setPinLocation(latLng);
+            }
+        });
+
+        mMap.setOnMarkerClickListener(marker -> {
+            String id = getKey(mMarkerMap, marker);
+            Place place = getPlace(id);
+            if(place != null) {
+                mRestaurantInfoFragment = RestaurantInfoFragment.newInstance(place);
+                mRestaurantInfoFragment.attachParentFragment(() -> {
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+                    transaction.remove(mRestaurantInfoFragment);
+                    transaction.commit();
+                    mRestaurantInfoFragment = null;
+                });
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_out_up, R.anim.slide_in_up);
+                assert mRestaurantInfoFragment != null;
+                transaction.replace(R.id.information_frag, mRestaurantInfoFragment, "Fragment");
+                transaction.addToBackStack(null);
+                transaction.commit();
+                return true;
+            }
+            return false;
+        });
         // Add a marker in Sydney and move the camera
         lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (!checkLocationPermission()) {
@@ -264,6 +224,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         this.setLatLng();
     }
 
+    public <K, V> K getKey(Map<K, V> map, V value) {
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -302,60 +270,49 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            PlaceSearchRequestParams params = new PlaceSearchRequestParams.Builder()
-                    .addCategory("FOOD_BEVERAGE")
-                    .setDistance(5000)
-                    .addField("name")
-                    .addField("location")
-                    .build();
+
 
             Criteria criteria = new Criteria();
 
             Location location = lm.getLastKnownLocation(lm.getBestProvider(criteria, false));
             if (location != null) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                        .zoom(17)                   // Sets the zoom
-                        .bearing(180)                // Sets the orientation of the camera to east
-                        .tilt(0)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                setLocation(new LatLng(location.getLatitude(), location.getLongitude()));
             }
-            PlaceManager.newPlaceSearchRequest(params, new PlaceManager.OnRequestReadyCallback() {
-                @Override
-                public void onLocationError(PlaceManager.LocationError error) {
 
-                }
-
-                @Override
-                public void onRequestReady(GraphRequest graphRequest) {
-                    graphRequest.setCallback(new GraphRequest.Callback() {
-                        @Override
-                        public void onCompleted(GraphResponse response) {
-                            try {
-                                MapFragment.this.setMarkers(response.getJSONObject().getJSONArray("data"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    graphRequest.executeAsync();
-                }
-            });
         }
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private void setLocation(LatLng latLng) {
+        mMap.clear();
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)      // Sets the center of the map to location user
+                .zoom(13)                   // Sets the zoom
+                .bearing(180)                // Sets the orientation of the camera to east
+                .tilt(0)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+
+        mMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        PlacesRepository.getPlaces(latLng, new PlacesRepository.Callback() {
+            @Override
+            public void receivedData(List<Place> places) {
+                setMarkers(places);
+            }
+
+            @Override
+            public void onError(JSONException e) {}
+        });
+    }
 
     public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getContext(),
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+            if (ActivityCompat.shouldShowRequestPermissionRationale(Objects.requireNonNull(getActivity()),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 // Show an explanation to the user *asynchronously* -- don't block
@@ -364,14 +321,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 new AlertDialog.Builder(getActivity())
                         .setTitle("Do I have permission?")
                         .setMessage("pls")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(getActivity(),
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION);
-                            }
+                        .setPositiveButton("OK", (dialogInterface, i) -> {
+                            //Prompt the user once explanation has been shown
+                            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    MY_PERMISSIONS_REQUEST_LOCATION);
                         })
                         .create()
                         .show();
@@ -389,7 +343,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void onMapSearch(View view) {
+    public void onMapSearch() {
 
         String location = locationSearch.getText().toString();
         List<Address> addressList = null;
@@ -404,64 +358,53 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-            //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
-
-            //setLatLongSearch(latLng);
+            setLocation(latLng);
         }
     }
 
-//    public void setLatLongSearch(LatLng latLng) {
-//        if (ContextCompat.checkSelfPermission(getContext(),
-//                Manifest.permission.ACCESS_FINE_LOCATION)
-//                == PackageManager.PERMISSION_GRANTED) {
-//
-//            mMap.getUiSettings().setMyLocationButtonEnabled(true);
-//            PlaceSearchRequestParams params = new PlaceSearchRequestParams.Builder()
-//                    .addCategory("FOOD_BEVERAGE")
-//                    .setDistance(5000)
-//                    .addField("name")
-//                    .addField("location")
-//                    .build();
-//            Criteria criteria = new Criteria();
-//
-//            Location location = lm.getLastKnownLocation(lm.getBestProvider(criteria, false));
-//
-//            location.setLatitude(latLng.latitude);
-//            location.setLongitude(latLng.longitude);
-//            if (location != null) {
-//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-//
-//                CameraPosition cameraPosition = new CameraPosition.Builder()
-//                        .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-//                        .zoom(17)                   // Sets the zoom
-//                        .bearing(0)                // Sets the orientation of the camera to east
-//                        .tilt(0)                   // Sets the tilt of the camera to 30 degrees
-//                        .build();                   // Creates a CameraPosition from the builder
-//                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//            }
-//            PlaceManager.newPlaceSearchRequest(params, new PlaceManager.OnRequestReadyCallback() {
-//                @Override
-//                public void onLocationError(PlaceManager.LocationError error) {
-//
-//                }
-//
-//                @Override
-//                public void onRequestReady(GraphRequest graphRequest) {
-//                    graphRequest.setCallback(new GraphRequest.Callback() {
-//                        @Override
-//                        public void onCompleted(GraphResponse response) {
-//                            try {
-//                                MapFragment.this.setMarkers(response.getJSONObject().getJSONArray("data"));
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    });
-//                    graphRequest.executeAsync();
-//                }
-//            });
-//        }
-//    }
+    @Override
+    public void onPlaceUpdateListener(Place place) {
+        Marker marker = mMarkerMap.get(place.getId());
+        if(marker != null) {
+            marker.setIcon(getIcon(place));
+        }
     }
+
+    private static BitmapDescriptor getIcon(Place place) {
+        float color = BitmapDescriptorFactory.HUE_RED;
+        if(place.getCustom()) {
+            color = BitmapDescriptorFactory.HUE_MAGENTA;
+        } else if(place.getKeto()) {
+            color = BitmapDescriptorFactory.HUE_GREEN;
+        }
+        return BitmapDescriptorFactory.defaultMarker(color);
+    }
+
+    @Override
+    public void onCustomPlaceAdded(Place place) {
+        LatLng position = new LatLng(place.getLocation().getLatitude(), place.getLocation().getLongitude());
+        if(mMap != null) {
+            if(mPlaces != null) {
+                mPlaces.add(place);
+            }
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .title(place.getName())
+                    .position(position)
+                    .icon(getIcon(place)));
+            mMarkerMap.put(place.getId(), marker);
+        }
+    }
+
+    private @Nullable Place getPlace(String id) {
+        if(mPlaces == null) return null;
+
+        for(Place place: mPlaces) {
+            if(place.getId().equals(id)) {
+                return place;
+            }
+        }
+
+        return null;
+    }
+}
 
