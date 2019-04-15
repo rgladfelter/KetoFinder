@@ -110,7 +110,7 @@ public class DropPinFragment extends Fragment {
     }
     private void savePlace(Place newPlace) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("custom_places");
-        ref.push().setValue(newPlace);
+        ref.child(newPlace.getId()).setValue(newPlace);
     }
 
     public void setPinLocation(LatLng latLng) {

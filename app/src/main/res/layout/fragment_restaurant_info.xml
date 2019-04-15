@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="RestaurantInfoFragment">
     <android.support.v7.widget.CardView
@@ -12,49 +12,155 @@
         app:cardCornerRadius="2dp"
         app:cardElevation="4dp"
         app:cardPreventCornerOverlap="false"
-        android:layout_marginTop="5dp"
-        app:contentPadding="15dp">
-        <RelativeLayout
+        app:contentPadding="10dp">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:orientation="vertical">
+                android:paddingBottom="15dp">
+                <TextView
+                    android:id="@+id/restaurant_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    tools:text="Ryans restaurant"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="70dp"
+                    android:layout_marginRight="70dp"
+                    android:layout_toLeftOf="@id/save_pin_button"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/save_pin_button"
+                    android:layout_alignParentStart="true" />
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/save_pin_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+            <TextView
+                android:id="@+id/address_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:drawablePadding="10dp"
+                android:drawableLeft="@drawable/ic_location_on_black_24dp"
+                tools:text="1234 Address Drive"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+            <TextView
+                android:id="@+id/website_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:drawablePadding="10dp"
+                android:textSize="18sp"
+                tools:text="website.com"
+                android:drawableLeft="@drawable/ic_launch_black_24dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/address" />
-                <TextView
-                    android:id="@+id/address_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pin_drop_desc"
-                    android:textSize="18sp"/>
-                <TextView
+                    android:id="@+id/keto_rating_text"
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/restaurant_name" />
-                <EditText
-                    android:id="@+id/restaurant_name"
-                    android:layout_width="match_parent"
+                    android:drawableLeft="@drawable/f_logo"
+                    android:drawablePadding="10dp"
+                    tools:text="4.2"
+                    android:textSize="22sp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:drawableStart="@drawable/f_logo" />
+                <RatingBar
+                    android:id="@+id/keto_rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:isIndicator="false"
+                    android:stepSize="1"
+                    android:layout_toRightOf="@id/keto_rating_text"
+                    android:layout_toEndOf="@id/keto_rating_text"
+                    android:layout_centerVertical="true"/>
+                <TextView
+                    android:id="@+id/keto_rating_count"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:autofillHints="Restaurant Name"
-                    android:inputType="text" />
-            </LinearLayout>
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/save_pin_button"
-                android:layout_width="wrap_content"
+                    tools:text="(34)"
+                    android:textSize="22sp"
+                    android:layout_toRightOf="@id/keto_rating_bar"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/keto_rating_bar" />
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/ic_close_black_24dp" />
-        </RelativeLayout>
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+                <TextView
+                    android:id="@+id/fb_rating_text"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_flogo_rgb_hex_blk_72"
+                    android:drawablePadding="10dp"
+                    tools:text="4.2"
+                    android:textSize="22sp"
+                    android:drawableStart="@drawable/ic_flogo_rgb_hex_blk_72"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"/>
+                <RatingBar
+                    android:id="@+id/fb_rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:isIndicator="true"
+                    android:layout_toRightOf="@id/fb_rating_text"
+                    android:layout_toEndOf="@id/fb_rating_text"
+                    android:layout_centerVertical="true"/>
+                <TextView
+                    android:id="@+id/fb_rating_count"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="(34)"
+                    android:textSize="22sp"
+                    android:layout_toRightOf="@id/fb_rating_bar"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/fb_rating_bar" />
+            </RelativeLayout>
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 </FrameLayout>

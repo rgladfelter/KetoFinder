@@ -202,10 +202,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, PlacesR
                 mRestaurantInfoFragment.attachParentFragment(() -> {
                     FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                     transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+                    assert mRestaurantInfoFragment != null;
                     transaction.remove(mRestaurantInfoFragment);
                     transaction.commit();
                     mRestaurantInfoFragment = null;
                 });
+                if(mDroppedPin != null) {
+                    mDroppedPin.remove();
+                    mDroppedPin = null;
+                }
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.setCustomAnimations(R.anim.slide_out_up, R.anim.slide_in_up);
                 assert mRestaurantInfoFragment != null;

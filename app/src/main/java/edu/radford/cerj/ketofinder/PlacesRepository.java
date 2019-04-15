@@ -14,6 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -22,8 +23,10 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 class PlacesRepository {
+
     interface Callback {
         void receivedData(List<Place> places);
         void onError(JSONException e);
@@ -36,6 +39,10 @@ class PlacesRepository {
     interface OnCustomPlaceAddedListener {
         void onCustomPlaceAdded(Place place);
     }
+
+    interface OnKetoRatingReceivedListener {
+        void onKetoRatingReceived(Map<String, Float> ratings);
+    }
     static void getPlaces(LatLng latLng, final Callback callback) {
         Location location = new Location(LocationManager.GPS_PROVIDER);
         location.setLatitude(latLng.latitude);
@@ -46,6 +53,9 @@ class PlacesRepository {
                 .setDistance(5000)
                 .addField("name")
                 .addField("location")
+                .addField("overall_star_rating")
+                .addField("rating_count")
+                .addField("website")
                 .build();
         GraphRequest request = PlaceManager.newPlaceSearchRequestForLocation(params, location);
         request.setCallback(response -> {
@@ -66,7 +76,7 @@ class PlacesRepository {
                             if(firebasePlace != null) {
                                 reducedPlaces.add(firebasePlace);
                             } else {
-                                placesRef.push().setValue(fbPlace);
+                                placesRef.child(fbPlace.getId()).setValue(fbPlace);
                                 reducedPlaces.add(fbPlace);
                             }
                         }
@@ -153,6 +163,24 @@ class PlacesRepository {
             }
         }
         return null;
+    }
+    static void getKetoRating(String id, OnKetoRatingReceivedListener listener) {
+        DatabaseReference ketoRatingsRef = FirebaseDatabase.getInstance().getReference().child("place").child(id).child("keto_ratings");
+        ketoRatingsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<Map<String, Float>> t = new GenericTypeIndicator<Map<String, Float>>() {};
+                Map<String, Float> ratings = dataSnapshot.getValue(t);
+                listener.onKetoRatingReceived(ratings);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+    }
+    static void addKetoRating(float rating, String id, String userId) {
+        DatabaseReference ketoRatingsRef = FirebaseDatabase.getInstance().getReference().child("place").child(id).child("keto_ratings");
+        ketoRatingsRef.child(userId).setValue(rating);
     }
 }
 

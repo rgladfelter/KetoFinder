@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_close_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_location_on_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -33,10 +33,13 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_close_black_24dp" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="color" value="353535" />
+                            <entry key="height" value="72" />
+                            <entry key="outputName" value="ic_flogo_rgb_hex_blk_72" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\Ryan" />
+                            <entry key="sourceFile" value="C:\Users\Ryan\Downloads\f-Logo_Assets\F_Logo_Online_09_2018\Black\SVG\flogo-RGB-HEX-Blk-72.svg" />
+                            <entry key="width" value="72" />
                           </map>
                         </option>
                       </PersistentState>

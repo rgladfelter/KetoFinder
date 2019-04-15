@@ -1,13 +1,11 @@
 package edu.radford.cerj.ketofinder;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,8 +22,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Map;
 
 //import butterknife.BindView;
 //import butterknife.ButterKnife;
@@ -72,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         Button mSignInButton = findViewById(R.id.sign_in_button);
 //        Button mCreateAccButton = findViewById(R.id.create_acc_button);
         mSignInButton.setOnClickListener(view -> signIn(mEmailField.getText().toString(), mPasswordField.getText().toString()));
-        
+
 //        mCreateAccButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -80,13 +76,10 @@ public class LoginActivity extends AppCompatActivity {
 //            }
 //        });
 
-        mSignupLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, CreateAccountActivity.class));
-                finish();
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            }
+        mSignupLink.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, CreateAccountActivity.class));
+            finish();
+            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
         });
 
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -109,13 +102,13 @@ public class LoginActivity extends AppCompatActivity {
 
 //        mEmailField.setHintTextColor(Color.WHITE);
 //        mPasswordField.setHintTextColor(Color.WHITE);
-        //this.signIn("mgladfelter@gmail.com", "password");
+        this.signIn("test5@test.com", "password");
     }
 
 
     private void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
-        if (!validateForm()) {
+        if (!validateForm(email, password)) {
             return;
         }
 
@@ -155,10 +148,9 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
-    private boolean validateForm() {
+    private boolean validateForm(String email, String password) {
         boolean valid = true;
 
-        String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
             mEmailField.setError("Required.");
             valid = false;
@@ -166,7 +158,6 @@ public class LoginActivity extends AppCompatActivity {
             mEmailField.setError(null);
         }
 
-        String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
             mPasswordField.setError("Required.");
             valid = false;
